@@ -231,7 +231,11 @@ async def button_click(update: Update, context: CallbackContext) -> None:
 async def gen_ai_img_1(update: Update, context):
     funcname = 'gen_ai_img_1'
     print(cStrDivider_1, f'ENTER - {funcname} _ {get_time_now()}', sep='\n')
-
+    group_name = update.message.chat.title if update.message.chat.type == 'supergroup' else None
+    if group_name:
+        print("Group name:", group_name)
+    else:
+        print("*NOTE* This message was not sent from a group.")
     user = update.message.from_user
     uid = user.id
     str_handle = user.first_name
