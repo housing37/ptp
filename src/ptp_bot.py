@@ -98,7 +98,7 @@ async def echo(update: Update, context):
     print(f'\nEXIT - {funcname}\n')
 
 async def bad_command(update: Update, context):
-    funcname = 'gen_ai_img_1'
+    funcname = 'bad_command'
     print(f'\nENTER - {funcname}\n')
 
     user = update.message.from_user
