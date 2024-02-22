@@ -257,7 +257,7 @@ async def gen_ai_img_1(update: Update, context):
         str_err = str_err + f'\n    "{str_prompt}"'
         await context.bot.send_message(chat_id=update.message.chat_id, text=str_err)
         print(str_err)
-        print('', f'EXIT - {funcname}', cStrDivider_1, sep='\n')
+        print('', f'EXIT - {funcname} _ {get_time_now()}', cStrDivider_1, sep='\n')
         return
 
     print('SENDING IMAGE to TG ...')
@@ -309,20 +309,18 @@ def gen_ai_image_openAI(str_prompt):
         err = 1
         return lst_imgs, err
 
-    while True:
-        try:
-            lst_imgs = exe_request_openAI(str_prompt, USE_HD_GEN) # True = HD (False = standard)
+    try:
+        lst_imgs = exe_request_openAI(str_prompt, USE_HD_GEN) # True = HD (False = standard)
+        IMG_REQUEST_SUCCESS_CNT += 1
 
-            IMG_REQUEST_SUCCESS_CNT += 1
-            break  # Exit the loop if no exception is caught
-        except Exception as e:
-            print_except(e, debugLvl=1)
-            print(f'img request cnt: {IMG_REQUEST_CNT}')
-            print(f'img request success ratio: {IMG_REQUEST_SUCCESS_CNT}/{IMG_REQUEST_CNT}')
-            # print("Exception caught:", e)
-            err = 2
-            time.sleep(2) # force user to wait for next attempt
-            return lst_imgs, err
+    except Exception as e:
+        print_except(e, debugLvl=1)
+        print(f'img request cnt: {IMG_REQUEST_CNT}')
+        print(f'img request success ratio: {IMG_REQUEST_SUCCESS_CNT}/{IMG_REQUEST_CNT}')
+        # print("Exception caught:", e)
+        err = 2
+        time.sleep(2) # force user to wait for next attempt
+        return lst_imgs, err
         
     print(f'img request cnt: {IMG_REQUEST_CNT}')
     print(f'img request success ratio: {IMG_REQUEST_SUCCESS_CNT}/{IMG_REQUEST_CNT}')
@@ -337,24 +335,29 @@ def exe_request_openAI(descr, use_hd=False):
     print(f'Sending request... openAI (quality: {quality}) _ {get_time_now()}')
     print('waiting for results... openAI')
 
-    # start 'print_wait_dots' waiting thread
-    RESP_RECEIVED = False
-    dot_thread = threading.Thread(target=print_wait_dots)
-    dot_thread.start()
+    try:
+        # start 'print_wait_dots' waiting thread
+        RESP_RECEIVED = False
+        dot_thread = threading.Thread(target=print_wait_dots)
+        dot_thread.start()
 
-    # execute request to openAI
-    client = OpenAI(api_key=OPENAI_KEY)
-    response = client.images.generate(
-        model="dall-e-3",
-        prompt=descr,
-        size="1024x1024",
-        quality=quality,
-        n=1,
-    )
+        # execute request to openAI
+        client = OpenAI(api_key=OPENAI_KEY)
+        response = client.images.generate(
+            model="dall-e-3",
+            prompt=descr,
+            size="1024x1024",
+            quality=quality,
+            n=1,
+        )
 
-    # end/join print 'dot' thread for waiting
-    RESP_RECEIVED = True
-    dot_thread.join()
+    except Exception as e:
+        print_except(e, debugLvl=1)
+        raise
+    finally:
+        # end/join print 'dot' thread for waiting
+        RESP_RECEIVED = True
+        dot_thread.join()
     
     print(f'\nresponse recieved _ {get_time_now()}')
     # print(response.data)
