@@ -34,7 +34,8 @@ CONSUMER_SECRET = 'nil_key'
 ACCESS_TOKEN = 'nil_key'
 ACCESS_TOKEN_SECRET = 'nil_key'
 PROMO_TWEET_TEXT = 'nil_text'
-LST_ADMINS = ['@housing37']
+# LST_ADMINS = ['@housing37', '@AlbertoBundy', '@phatkow']
+LST_ADMINS = ['@housing37', '@AlbertoBundy']
 IDX_LAST_COOKIE = -1
 
 OPENAI_KEY = 'nil_key'
@@ -180,7 +181,12 @@ def tweet_promo(str_tweet, img_url):
 
 async def button_click(update: Update, context: CallbackContext) -> None:
     funcname = 'button_click'
-    print(cStrDivider_1, f'ENTER - {funcname}', sep='\n')
+    print(cStrDivider_1, f'ENTER - {funcname} _ {get_time_now()}', sep='\n')
+    # group_name = update.callback_query.message.chat.title if update.message.chat.type == 'supergroup' else None
+    # if group_name:
+    #     print("Group name:", group_name)
+    # else:
+    #     print("*NOTE* This message was not sent from a group.")
     str_uname = update.callback_query.from_user.username
     str_handle = update.callback_query.from_user.first_name
     print(f'from user: @{str_uname} (aka. {str_handle})')
@@ -207,8 +213,8 @@ async def button_click(update: Update, context: CallbackContext) -> None:
     print(f'callback_data: {callback_data}') # callback_data = '@username (aka. handle)'
     print(f'img_url: {img_url}')
     
-    # tweet promo
-    str_tweet = PROMO_TWEET_TEXT + f'\n\nauthor: TG -> {callback_data}' # should we use 't.me/username' ?
+    # tweet promo (note: callback_data[1:] = remove '@' from user name )
+    str_tweet = PROMO_TWEET_TEXT + f'\n\nauthor: t.me/{callback_data[1:]}' # should we use 't.me/username' ?
     response, success = tweet_promo(str_tweet, img_url) # callback_data = TG author
     tweet_data = response.data
     tweet_text = tweet_data['text']
@@ -226,7 +232,7 @@ async def button_click(update: Update, context: CallbackContext) -> None:
     print(f'\nstr_resp: {str_resp}')
     await context.bot.send_message(chat_id=update.callback_query.message.chat_id, text=str_resp)
 
-    print('', f'EXIT - {funcname}', cStrDivider_1, sep='\n')
+    print('', f'EXIT - {funcname} _ {get_time_now()}', cStrDivider_1, sep='\n')
     
 async def gen_ai_img_1(update: Update, context):
     funcname = 'gen_ai_img_1'
