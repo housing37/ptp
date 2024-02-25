@@ -258,7 +258,7 @@ async def gen_ai_img_1(update: Update, context):
     # check if TG group is allowed to use the bot
     if str(_chat_id) not in WHITELIST_TG_CHAT_IDS:
         print("*** WARNING ***: non-whitelist TG group trying to use the bot; sending deny message...")
-        str_conf = f"@{str_uname} (aka. {str_handle}) -> F*CK OFF ... don't steal : /"
+        str_conf = f"@{str_uname} (aka. {str_handle}) -> you do not have permission to use this bot : /"
         print(str_conf)
         await context.bot.send_message(chat_id=update.message.chat_id, text=str_conf)    
         print('', f'EXIT - {funcname} _ {get_time_now()}', cStrDivider_1, sep='\n')
