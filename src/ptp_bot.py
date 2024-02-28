@@ -45,6 +45,7 @@ RESP_RECEIVED = False
 
 WHITELIST_TG_CHAT_IDS = [
     '-1002063595190', # PTP - bot testing
+    '-1002101308549', # $PTP shillers
     ]
 #------------------------------------------------------------#
 #   FUNCTIONS                                                #
