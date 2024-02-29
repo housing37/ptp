@@ -46,6 +46,7 @@ RESP_RECEIVED = False
 WHITELIST_TG_CHAT_IDS = [
     '-1002063595190', # PTP - bot testing
     '-1002101308549', # $PTP shillers
+    '-4161332199', # *NOTE* This message was not sent from a group. (custom request by @AlbertoBundy)
     ]
 #------------------------------------------------------------#
 #   FUNCTIONS                                                #
