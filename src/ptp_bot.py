@@ -48,6 +48,7 @@ WHITELIST_TG_CHAT_IDS = [
     '-1002101308549', # $PTP shillers
     '-4161332199', # *NOTE* This message was not sent from a group. (custom request by @AlbertoBundy)
     ]
+ENABLE_IMG_TWEET = False
 #------------------------------------------------------------#
 #   FUNCTIONS                                                #
 #------------------------------------------------------------#
@@ -304,12 +305,17 @@ async def gen_ai_img_1(update: Update, context):
     ]
     reply_markup = InlineKeyboardMarkup(inline_keyboard)
     try:
-        await context.bot.send_message(
-            chat_id=update.message.chat_id, 
-            text=f'@{str_uname} (aka. {str_handle}) -> here is your image\n  "{str_prompt}" ...\n {url}',
-            # reply_markup = ReplyKeyboardMarkup([['Your Button Text']])
-            reply_markup = reply_markup
-            )
+        if ENABLE_IMG_TWEET:
+            await context.bot.send_message(
+                chat_id=update.message.chat_id, 
+                text=f'@{str_uname} (aka. {str_handle}) -> here is your image\n  "{str_prompt}" ...\n {url}',
+                # reply_markup = ReplyKeyboardMarkup([['Your Button Text']])
+                reply_markup = reply_markup
+                )
+        else:
+            await context.bot.send_message(
+                chat_id=update.message.chat_id, 
+                text=f'@{str_uname} (aka. {str_handle}) -> here is your image\n  "{str_prompt}" ...\n {url}')
     except Exception as e:
         # note_021724: exception added for TG: @enriquebambo (aka. 🍊 👾 𝐄η𝐑𝕚ⓀẸⓑᗩｍ𝕓ㄖ 👾🍊 {I DM First, I'm Impostor})
         #   sending response with TG button was causing a crash (but images were indeed successfully received from BING)
