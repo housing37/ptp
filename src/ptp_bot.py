@@ -20,6 +20,7 @@ import webbrowser
 import tweepy, requests, os # pip install tweepy
 from openai import OpenAI # pip install openai
 from _env import env
+import url_short
 
 #------------------------------------------------------------#
 #   GLOBALS                                                  #
@@ -49,6 +50,7 @@ WHITELIST_TG_CHAT_IDS = [
     '-4161332199', # *NOTE* This message was not sent from a group. (custom request by @AlbertoBundy)
     ]
 ENABLE_IMG_TWEET = False
+USE_SHORT_URL = True
 #------------------------------------------------------------#
 #   FUNCTIONS                                                #
 #------------------------------------------------------------#
@@ -299,6 +301,9 @@ async def gen_ai_img_1(update: Update, context):
             url = lst_imgs[r_idx]
             break
 
+    if USE_SHORT_URL:
+        url = url_short.make_tiny(url)
+        
     # Create an inline keyboard markup with a button
     inline_keyboard = [
         [InlineKeyboardButton("Request Tweet", callback_data=f'@{str_uname} (aka. {str_handle})')]
