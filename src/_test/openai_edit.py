@@ -6,6 +6,9 @@ from PIL import Image  # used to print and edit images
 from _env import env
 # initialize OpenAI client
 client = OpenAI(api_key=env.OPENAI_KEY)
+# TOKEN_dev_teddy
+
+GO_VARIATION = False
 
 #===================================================
 # set a directory to save DALL·E images to
@@ -33,6 +36,7 @@ generation_response = client.images.generate(
     prompt=prompt,
     n=1,
     size="1024x1024",
+    quality="standard",
     response_format="url",
 )
 
@@ -41,8 +45,8 @@ generation_response = client.images.generate(
 print('Generating image... DONE')
 #===================================================
 # save the image
-# generated_image_name = "generated_image.png"  # any name you like; the filetype should be .png
-generated_image_name = input('\n Enter image file to save to:\n > ')
+generated_image_name = "temp_gen.png"  # any name you like; the filetype should be .png
+# generated_image_name = input('\n Enter image file to save to:\n > ')
 print(f' file name: {generated_image_name}')
 print('\nSaving file...')
 generated_image_filepath = os.path.join(image_dir, generated_image_name)
@@ -61,7 +65,7 @@ Image.open(generated_image_filepath).show()
 
 
 #===================================================
-if False:
+if GO_VARIATION:
     var_cnt = 4
     print(f"\nCreating variations x{var_cnt} ...")
     # create variations
@@ -105,34 +109,63 @@ if False:
 
 #===================================================
 print('\nCreating mask ...')
-# create a mask
-width = 1024
-height = 1024
-mask = Image.new("RGBA", (width, height), (0, 0, 0, 1))  # create an opaque image mask
+def modify_alpha(image, center_x, center_y):
+    width, height = image.size
+    # for y in range(center_y):
+    #     for x in range(center_x):
+    for y in range(center_y, height):
+        for x in range(center_x, width):
+            pixel = image.getpixel((x, y))
+            r, g, b, _ = pixel  # We only need RGB channels
+            image.putpixel((x, y), (r, g, b, 0))  # Set alpha to 0 for the top-left corner
 
-# set the bottom half to be transparent
-for x in range(width):
-    for y in range(height // 2, height):  # only loop over the bottom half of the mask
-        # set alpha (A) to zero to turn pixel transparent
-        alpha = 0
-        mask.putpixel((x, y), (0, 0, 0, alpha))
+if USE_MASK:
+    # create a mask
+    width = 1024
+    height = 1024
+    mask = Image.new("RGBA", (width, height), (0, 0, 0, 1))  # create an opaque image mask
+    # mask.putpixel((x, y), (0, 0, 0, alpha))
+    # Find the center coordinates
+    center_x = mask.width // 2
+    center_y = mask.height // 2
 
-# save the mask
-mask_name = "bottom_half_mask.png"
-mask_filepath = os.path.join(image_dir, mask_name)
-mask.save(mask_filepath)
-print(f'Saved mask: {mask_filepath}')
+    # Modify the alpha channel for the specified region
+    modify_alpha(mask, center_x, center_y)
+
+    # mask = Image.new("RGBA", (width, height), (0, 0, 0, 1))  # create an opaque image mask
+    # 
+    # # set the bottom half to be transparent
+    # for x in range(width):
+    #     for y in range(height // 2, height):  # only loop over the bottom half of the mask
+    #         # set alpha (A) to zero to turn pixel transparent
+    #         alpha = 0
+    #         mask.putpixel((x, y), (0, 0, 0, alpha))
+
+    # save the mask
+    mask_name = "temp_mask.png"
+    mask_filepath = os.path.join(image_dir, mask_name)
+    mask.save(mask_filepath)
+    print(f'Saved mask: {mask_filepath}')
+else:
+    mask_filepath = '<nil_mask>'
+    gen_image = Image.open(generated_image_filepath)
+
+    center_x = gen_image.width // 2
+    center_y = gen_image.height // 2
+
+    # Modify the alpha channel for the specified region
+    modify_alpha(mask, center_x, center_y)
 
 #===================================================
-edit_prompt = input(f' Enter edit description to append:\n > ')
+edit_prompt = input(f'\n Enter edit description to append:\n > ')
 new_prompt = f'{prompt}. {edit_prompt}'
 print(f' edit_prompt: {edit_prompt}')
 print('\nEditing image ... (w/ OG and mask and prompts)')
 print(f'      OG: {generated_image_filepath}')
 print(f'    mask: {mask_filepath}')
-print(f' OG prompt:\n  {prompt}')
-print(f' edit_prompt:\n  {edit_prompt}')
-print(f' new_prompt:\n  {new_prompt}')
+print(f'    OG prompt: {prompt}')
+print(f'    edit_prompt: {edit_prompt}')
+print(f'    new_prompt: {new_prompt}')
 
 # edit an image
 
@@ -153,7 +186,7 @@ print('Editing image ... (w/ OG and mask and prompts) _ DONE')
 #===================================================
 print('\nSaving edited image ...')
 # save the image
-edited_image_name = "edited_image.png"  # any name you like; the filetype should be .png
+edited_image_name = "temp_edit.png"  # any name you like; the filetype should be .png
 edited_image_filepath = os.path.join(image_dir, edited_image_name)
 edited_image_url = edit_response.data[0].url  # extract image URL from response
 edited_image = requests.get(edited_image_url).content  # download the image
