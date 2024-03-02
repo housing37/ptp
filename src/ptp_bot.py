@@ -48,6 +48,7 @@ WHITELIST_TG_CHAT_IDS = [
     '-1002063595190', # PTP - bot testing
     '-1002101308549', # $PTP shillers
     '-4161332199', # *NOTE* This message was not sent from a group. (custom request by @AlbertoBundy)
+    '-1001941928043', # TeddyShares - testing
     ]
 ENABLE_IMG_TWEET = False
 USE_SHORT_URL = True
@@ -303,7 +304,7 @@ async def gen_ai_img_1(update: Update, context):
 
     if USE_SHORT_URL:
         url = url_short.make_tiny(url)
-        
+
     # Create an inline keyboard markup with a button
     inline_keyboard = [
         [InlineKeyboardButton("Request Tweet", callback_data=f'@{str_uname} (aka. {str_handle})')]
