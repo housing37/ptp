@@ -425,7 +425,7 @@ def main():
 
     # Register message handler for all other messages
     # dp.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, echo)) # ~ = negate (ie. AND NOT)
-    dp.add_handler(MessageHandler(filters.Command, bad_command))
+    # dp.add_handler(MessageHandler(filters.Command, bad_command))
     # Start the Bot
     dp.run_polling()
     # Update.start_polling()
