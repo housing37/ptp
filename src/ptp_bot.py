@@ -44,6 +44,9 @@ OPENAI_KEY = 'nil_key'
 USE_HD_GEN = False
 RESP_RECEIVED = False
 
+WHITELIST_ADMINS = [
+        '581475171', # @housing37
+    ]
 WHITELIST_TG_CHAT_IDS = [
     '-1002063595190', # PTP - bot testing
     '-1002101308549', # $PTP shillers
@@ -245,6 +248,15 @@ async def button_click(update: Update, context: CallbackContext) -> None:
 
     print('', f'EXIT - {funcname} _ {get_time_now()}', cStrDivider_1, sep='\n')
     
+    
+async def gen_ai_img_admin(update: Update, context):
+    funcname = 'gen_ai_img_admin'
+    print(cStrDivider_1, f'ENTER - {funcname} _ {get_time_now()}', sep='\n')
+    user = update.message.from_user
+    uid = user.id
+    print('', f'EXIT - {funcname} _ {get_time_now()}', cStrDivider_1, sep='\n')
+    pass
+
 async def gen_ai_img_1(update: Update, context):
     funcname = 'gen_ai_img_1'
     print(cStrDivider_1, f'ENTER - {funcname} _ {get_time_now()}', sep='\n')
@@ -257,6 +269,7 @@ async def gen_ai_img_1(update: Update, context):
         print("*NOTE* This message was not sent from a group.")
     user = update.message.from_user
     uid = user.id
+    print("user_id:", uid)
     str_handle = user.first_name
     str_uname = user.username
     inp = update.message.text
@@ -419,6 +432,7 @@ def main():
     dp.add_handler(CommandHandler("test", test))
     dp.add_handler(CommandHandler("start", start))
     dp.add_handler(CommandHandler("gen_image", gen_ai_img_1))
+    dp.add_handler(CommandHandler("gen_image_admin", gen_ai_img_admin))
     dp.add_handler(CommandHandler("tweet_promo", tweet_promo))
     # Add the button click handler
     dp.add_handler(CallbackQueryHandler(button_click))
@@ -438,11 +452,7 @@ def main():
 #------------------------------------------------------------#
 READ_ME = f'''
     *DESCRIPTION*
-        choose blockchain
-        get latest tx pool
-            OR
-        search for 'from' address 
-         and loop get tx pool
+        nil
 
     *NOTE* INPUT PARAMS...
         nil
