@@ -46,6 +46,7 @@ RESP_RECEIVED = False
 
 WHITELIST_ADMINS = [
         '581475171', # @housing37
+        '6900972647', # @AlbertoBundy
     ]
 WHITELIST_TG_CHAT_IDS = [
     '-1002063595190', # PTP - bot testing
@@ -55,6 +56,9 @@ WHITELIST_TG_CHAT_IDS = [
     ]
 ENABLE_IMG_TWEET = False
 USE_SHORT_URL = True
+DICT_DESCR = {
+    'TRAILER_PARK':"NOTE: if the current description results in an 'outdoor setting', then make sure that a trailer park setting is present or viewable somehwere in the image",
+}
 #------------------------------------------------------------#
 #   FUNCTIONS                                                #
 #------------------------------------------------------------#
@@ -254,10 +258,22 @@ async def gen_ai_img_admin(update: Update, context):
     print(cStrDivider_1, f'ENTER - {funcname} _ {get_time_now()}', sep='\n')
     user = update.message.from_user
     uid = user.id
+    str_handle = user.first_name
+    str_uname = user.username
+    inp = update.message.text
+    if str(uid) not in WHITELIST_ADMINS:
+        print(f"*** WARNING ***: non-whitelist TG user id trying to use cmd: '{inp.split()[0]}'; sending deny message...")
+        str_conf = f"@{str_uname} (aka. {str_handle}) -> you do not have permission to use this cmd: '{inp.split()[0]}' : /"
+        print(str_conf)
+        await context.bot.send_message(chat_id=update.message.chat_id, text=str_conf)    
+        print('', f'EXIT - {funcname} _ {get_time_now()}', cStrDivider_1, sep='\n')
+        return
+    await gen_ai_img_1(update, context, admin_cmd=True)
+
     print('', f'EXIT - {funcname} _ {get_time_now()}', cStrDivider_1, sep='\n')
     pass
 
-async def gen_ai_img_1(update: Update, context):
+async def gen_ai_img_1(update: Update, context, admin_cmd=False):
     funcname = 'gen_ai_img_1'
     print(cStrDivider_1, f'ENTER - {funcname} _ {get_time_now()}', sep='\n')
     group_name = update.message.chat.title if update.message.chat.type == 'supergroup' else None
@@ -273,6 +289,10 @@ async def gen_ai_img_1(update: Update, context):
     str_handle = user.first_name
     str_uname = user.username
     inp = update.message.text
+
+    # append TRAILER_PARK description if not coming from cmd: /gen_image_admin
+    if not admin_cmd:
+        inp = inp+'.. '+DICT_DESCR['TRAILER_PARK']
 
     # check if TG group is allowed to use the bot
     if str(_chat_id) not in WHITELIST_TG_CHAT_IDS:
