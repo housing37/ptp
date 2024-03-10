@@ -67,7 +67,7 @@ OPENAI_KEY = os.environ['OPENAI_KEY']
 
 # telegram
 TOKEN_dev = os.environ['TG_TOKEN_DEV'] # PTPTestBot @ptp_test_bot (dev)
-TOKEN_prod = os.environ['TG_TOKEN_PROD'] # @PicassoAiPTPart_bot (prod)
+TOKEN_prod = os.environ['TG_TOKEN_PROD'] # @PTP_PicassoArtBot (prod)
 TOKEN_dev_teddy = os.environ['TG_TOKEN_DEV_teddy'] # TeddySharesBot (dev)
 
 
