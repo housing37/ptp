@@ -53,6 +53,7 @@ WHITELIST_TG_CHAT_IDS = [
     '-1002101308549', # $PTP shillers
     '-4161332199', # *NOTE* This message was not sent from a group. (custom request by @AlbertoBundy)
     '-1001941928043', # TeddyShares - testing
+    '-1002102367737', # Pulse Trailer Park (added 031024)
     ]
 ENABLE_IMG_TWEET = False
 USE_SHORT_URL = True
