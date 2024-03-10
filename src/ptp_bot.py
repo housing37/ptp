@@ -307,7 +307,8 @@ async def gen_ai_img_1(update: Update, context, admin_cmd=False):
     str_conf = f'@{str_uname} (aka. {str_handle}) -> please wait, generating image ...\n    "{str_prompt}"'
     print(str_conf)
 
-    await context.bot.send_message(chat_id=update.message.chat_id, text=str_conf)
+    # comment to disable confirmation wait message
+    # await context.bot.send_message(chat_id=update.message.chat_id, text=str_conf)
 
     # lst_imgs, err = gen_ai_image(str_prompt)
     lst_imgs, err = gen_ai_image_openAI(str_prompt)
@@ -352,9 +353,9 @@ async def gen_ai_img_1(update: Update, context, admin_cmd=False):
                 reply_markup = reply_markup
                 )
         else:
-            await context.bot.send_message(
-                chat_id=update.message.chat_id, 
-                text=f'@{str_uname} (aka. {str_handle}) -> here is your image\n  "{str_prompt}" ...\n {url}')
+            await update.message.reply_text(url)
+            # msg_ = f'@{str_uname} (aka. {str_handle}) -> here is your image\n  "{str_prompt}" ...\n {url}'
+            # await context.bot.send_message(chat_id=update.message.chat_id,text=msg_)
     except Exception as e:
         # note_021724: exception added for TG: @enriquebambo (aka. 🍊 👾 𝐄η𝐑𝕚ⓀẸⓑᗩｍ𝕓ㄖ 👾🍊 {I DM First, I'm Impostor})
         #   sending response with TG button was causing a crash (but images were indeed successfully received from BING)
@@ -532,7 +533,7 @@ if __name__ == "__main__":
     ## exe ##
     try:
         # select to use prod bot or dev bot
-        inp = input('Select token type to use:\n  0 = prod (@nil)\n  1 = dev (@ptp_test_bot)\n  > ')
+        inp = input('Select token type to use:\n  0 = prod (@PicassoAiPTPart_bot)\n  1 = dev (@ptp_test_bot)\n  > ')
         USE_PROD = True if inp == '0' else False
         print(f'  input = {inp} _ USE_PROD = {USE_PROD}')
         
