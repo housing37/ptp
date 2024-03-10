@@ -533,7 +533,7 @@ if __name__ == "__main__":
     ## exe ##
     try:
         # select to use prod bot or dev bot
-        inp = input('Select token type to use:\n  0 = prod (@PicassoAiPTPart_bot)\n  1 = dev (@ptp_test_bot)\n  > ')
+        inp = input('Select token type to use:\n  0 = prod (@PTP_PicassoArtBot)\n  1 = dev (@ptp_test_bot)\n  > ')
         USE_PROD = True if inp == '0' else False
         print(f'  input = {inp} _ USE_PROD = {USE_PROD}')
         
