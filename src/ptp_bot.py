@@ -292,9 +292,10 @@ async def gen_ai_img_1(update: Update, context, admin_cmd=False):
     str_uname = user.username
     inp = update.message.text
 
+    # NOTE: 050124 disabled (was only for PTP not being used for MOL token - Man Of Light)
     # append TRAILER_PARK description if not coming from cmd: /gen_image_admin
-    if not admin_cmd:
-        inp = inp+'.. '+DICT_DESCR['TRAILER_PARK']
+    # if not admin_cmd:
+    #     inp = inp+'.. '+DICT_DESCR['TRAILER_PARK']
 
     # check if TG group is allowed to use the bot
     if str(_chat_id) not in WHITELIST_TG_CHAT_IDS:
